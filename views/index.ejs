@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Location Tracker</title>
+    <link rel="stylesheet" href="css/script.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+    />
+  </head>
+  <body>
+    <div id="map"  style="height: 500px; width: 100%;"></div>
+
+<div id="distanceDisplay" style="margin-top: 20px;">
+  <h3>Distance to Other Users:</h3>
+  <p id="distanceOutput" style="background: #f0f0f0; border: 1px solid #ccc; padding: 10px;">Distance will appear here...</p>
+</div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
+    ></script>
+    <script
+      src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+    ></script>
+    <script src="/js/script.js"></script>
+ 
+    <script>
+      window.onload = function() {
+        const userName = prompt("Please enter your name:");
+
+        if (userName) {
+          alert("Hello, " + userName + "! Welcome to the website.");
+          
+          const socket = io();
+          socket.emit("send-name", userName);
+        } else {
+          alert("Hello! Welcome to the website.");
+        }
+      };
+    </script>
+</html>
