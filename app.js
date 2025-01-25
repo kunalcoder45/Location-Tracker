@@ -5,55 +5,45 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const app = express();
-
 const server = http.createServer(app);
-
 const io = new Server(server);
 
+// Handle socket.io connections
 io.on("connection", (socket) => {
-  console.log("A user connected");
+  console.log("A user connected:", socket.id);
 
+  // Listen for 'send-location' event
   socket.on("send-location", (data) => {
+    console.log("Received location:", data);
+    // Emit the location to all clients, including the sender
     io.emit("recived-location", { id: socket.id, ...data });
-    console.log("Received location", data);
   });
 
-  socket.on('send-name', (name) => {
-    console.log("User's Name:", name); // Log name to VS Code terminal
+  // Listen for 'send-name' event
+  socket.on("send-name", (name) => {
+    console.log("User's Name:", name);
   });
 
+  // Handle user disconnection
   socket.on("disconnect", () => {
-    io.emit("user-disconnected, socket.id");
-    console.log("A user disconnected");
+    console.log("A user disconnected:", socket.id);
+    io.emit("user-disconnected", socket.id);
   });
 });
 
-io.on("connection", (socket) => {
-  console.log("A user connected");
-
-  // Listen for the 'send-location' event
-  socket.on("send-location", (data) => {
-    console.log("Received location:", data); // Logging the received location
-    // Broadcast the location to all other clients (except the sender)
-    socket.broadcast.emit("recived-location", data);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("A user disconnected");
-  });
-});
-
+// Set EJS as the view engine
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.set("view engine", "ejs");
-
 app.use(express.static(path.join(__dirname, "public")));
 
+// Route to render the main page
 app.get("/", (req, res) => {
   res.render("index");
 });
 
+// Start the server
 server.listen(5000, () => {
   console.log(`Server is running on port ${server.address().port}`);
 });
