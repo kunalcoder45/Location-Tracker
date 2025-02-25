@@ -3,7 +3,9 @@ import http from "http";
 import { Server } from "socket.io";
 import path from "path";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 
+const PORT = process.env.PORT || 3000;
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -44,6 +46,6 @@ app.get("/", (req, res) => {
 });
 
 // Start the server
-server.listen(5000, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${server.address().port}`);
 });
